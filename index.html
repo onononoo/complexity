@@ -1,0 +1,147 @@
+<meta charset="utf-8">
+<title>complexity</title>
+<link rel="stylesheet" href="css/base.css">
+
+<div class="page">
+  <h1>complexity</h1>
+  <p>Document revision 4. Last updated 16 September 2026.</p>
+  <hr>
+
+  <h2>1. Introduction</h2>
+  <p>This page contains a compiler for signed distance field programs. The program in section 3 is compiled when it is changed. The results of each compiler stage are listed in section 2.</p>
+
+  <h2>2. Compiler stages</h2>
+  <div class="tablewrap">
+    <table id="pipe">
+      <thead><tr><th scope="col">No.</th><th scope="col">Stage</th><th scope="col">Result</th><th scope="col">Time</th></tr></thead>
+      <tbody>
+        <tr data-stage="lex"><td>2.1</td><td>Lexical analysis</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="parse"><td>2.2</td><td>Parsing</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="elab"><td>2.3</td><td>Type checking and elaboration</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="opt"><td>2.4</td><td>Dead code analysis</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="emit"><td>2.5</td><td>GLSL code generation</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="bytecode"><td>2.6</td><td>Bytecode generation</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="verify"><td>2.7</td><td>Bytecode verification</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="gradient"><td>2.8</td><td>Gradient check</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="bounds"><td>2.9</td><td>Surface localization</td><td class="pm">—</td><td class="pt">—</td></tr>
+        <tr data-stage="gpu"><td>2.10</td><td>GPU shader link</td><td class="pm">—</td><td class="pt">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>3. Source</h2>
+  <p>
+    <label for="preset">Example:</label>
+    <select id="preset"></select>
+  </p>
+  <div class="editor">
+    <div class="gutter" id="gutter" aria-hidden="true">1</div>
+    <div class="code">
+      <pre id="hl" aria-hidden="true"></pre>
+      <textarea id="src" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-label="Source code"></textarea>
+    </div>
+  </div>
+  <div class="diag" id="diag"></div>
+
+  <h2>4. Viewport</h2>
+  <p>
+    <button id="pause" type="button">Resume</button>
+    <button id="resetcam" type="button">Reset view</button>
+  </p>
+  <canvas id="view" aria-label="Rendered distance field"></canvas>
+  <p>Drag to rotate. Scroll to zoom. Click without dragging to probe a point (see section 5).</p>
+  <p id="status">Frame rate: not measured.</p>
+  <p id="glfail" hidden>WebGL2 is not available in this browser. Sections 5 and 6 still work.</p>
+
+  <h2>5. Probe</h2>
+  <p>The probe traces a ray on the CPU using the compiled bytecode.</p>
+  <div class="tablewrap">
+    <table>
+      <tbody>
+        <tr><th scope="row">Pixel</th><td id="pr-pixel">No probe yet.</td></tr>
+        <tr><th scope="row">Result</th><td id="pr-hit">—</td></tr>
+        <tr><th scope="row">March steps</th><td id="pr-steps">—</td></tr>
+        <tr><th scope="row">Ray length</th><td id="pr-len">—</td></tr>
+        <tr><th scope="row">Position</th><td id="pr-pos">—</td></tr>
+        <tr><th scope="row">Surface normal</th><td id="pr-normal">—</td></tr>
+        <tr><th scope="row">Bytecode evaluations</th><td id="pr-evals">—</td></tr>
+        <tr><th scope="row">Time</th><td id="pr-time">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <label for="ex">x</label> <input id="ex" type="number" step="0.1" value="0">
+    <label for="ey">y</label> <input id="ey" type="number" step="0.1" value="0">
+    <label for="ez">z</label> <input id="ez" type="number" step="0.1" value="0">
+    <button type="button" id="evalbtn">Evaluate distance</button>
+    <span id="evalout"></span>
+  </p>
+
+  <h2>6. Cross-section</h2>
+  <p>Horizontal slice of the distance field. Darker grey is inside the surface. Contour lines are 0.1 units apart. Outlined squares are octree cells from stage 2.9 that may contain the surface.</p>
+  <p>
+    <label for="section-y">Slice height y</label> <input id="section-y" type="number" step="0.1" value="0">
+    <button type="button" id="section-draw">Draw cross-section</button>
+  </p>
+  <canvas id="section" width="300" height="300" aria-label="Cross-section of the distance field"></canvas>
+  <p id="section-caption">Not drawn.</p>
+
+  <h2>7. Output</h2>
+  <p role="tablist" aria-label="Compiler output" class="tabs">
+    <button type="button" role="tab" aria-selected="true" data-view="glsl">GLSL</button>
+    <button type="button" role="tab" aria-selected="false" data-view="graph">Expression graph</button>
+    <button type="button" role="tab" aria-selected="false" data-view="bytecode">Bytecode</button>
+    <button type="button" role="tab" aria-selected="false" data-view="analysis">Analysis</button>
+    <button type="button" role="tab" aria-selected="false" data-view="tokens">Tokens</button>
+  </p>
+  <p id="outmeta"></p>
+  <pre class="out" id="out" role="tabpanel"></pre>
+
+  <h2>8. Language reference</h2>
+  <p><code>let name = expr</code> binds a value. <code>fn name(a, b) = expr</code> defines a function, which is inlined at each call. The last line is the distance to render. <code>p</code> is the sample point (vec3), <code>t</code> is time in seconds, and <code>pi</code> is π.</p>
+  <p>Operators: <code>+ - * /</code> on floats and vectors; <code>a | b</code> union; <code>a &amp; b</code> intersection; <code>a ~ b</code> subtraction. Components are read with <code>.x</code>, <code>.xz</code> and so on. <code>#</code> starts a comment. Ctrl+Enter recompiles immediately.</p>
+  <dl class="reftable" id="reftable"></dl>
+  <hr>
+  <p>End of document.</p>
+  <p>this project is open source, so please donate to support me, my wife, and my projects :) ! btc: bc1qs4z04ltddh6vaqd4stu3p4vekv253ht4cwqma4</p>
+  <p>source code and my other projects: <a href="https://github.com/onononoo/complexity" target="_blank" rel="noopener">https://github.com/onononoo/complexity</a> :: <a href="https://github.com/onononoo/" target="_blank" rel="noopener">https://github.com/onononoo/</a></p>
+</div>
+
+<script src="js/core/errors.js"></script>
+<script src="js/core/mathlib.js"></script>
+<script src="js/core/builtins.js"></script>
+<script src="js/core/lexer.js"></script>
+<script src="js/core/parser.js"></script>
+<script src="js/core/graph.js"></script>
+<script src="js/passes/signatures.js"></script>
+<script src="js/passes/rewrite.js"></script>
+<script src="js/passes/elaborate.js"></script>
+<script src="js/passes/analyze.js"></script>
+<script src="js/algebra/real.js"></script>
+<script src="js/algebra/dual.js"></script>
+<script src="js/algebra/interval.js"></script>
+<script src="js/sdf/library.js"></script>
+<script src="js/sdf/generic-calls.js"></script>
+<script src="js/backend/glsl.js"></script>
+<script src="js/backend/kernels.js"></script>
+<script src="js/backend/bytecode.js"></script>
+<script src="js/backend/vm.js"></script>
+<script src="js/backend/evaluator.js"></script>
+<script src="js/analysis/random.js"></script>
+<script src="js/analysis/verify.js"></script>
+<script src="js/analysis/gradient.js"></script>
+<script src="js/analysis/octree.js"></script>
+<script src="js/app/compiler.js"></script>
+<script src="js/app/presets.js"></script>
+<script src="js/gpu/shaders.js"></script>
+<script src="js/gpu/renderer.js"></script>
+<script src="js/ui/editor.js"></script>
+<script src="js/ui/diagnostics.js"></script>
+<script src="js/ui/output.js"></script>
+<script src="js/ui/probe.js"></script>
+<script src="js/ui/section.js"></script>
+<script src="js/ui/camera.js"></script>
+<script src="js/app/pipeline.js"></script>
+<script src="js/app/loop.js"></script>
+<script src="js/app/events.js"></script>
+<script src="js/app/boot.js"></script>
