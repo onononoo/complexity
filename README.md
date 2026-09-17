@@ -1,10 +1,10 @@
-# complexity
+# complexity!!1!!!1111!1!
 
 a compiler for a small language that describes 3d shapes as signed distance fields. it runs entirely in the browser. programs are compiled to a glsl shader for rendering on the gpu and to register bytecode for a javascript virtual machine. the compiler also checks its own output with a reference evaluator, automatic differentiation and interval arithmetic.
 
 there is no build step and there are no dependencies.
 
-## contents
+## tabbel of contents
 
 - [quick start](#quick-start)
 - [example program](#example-program)
@@ -17,7 +17,7 @@ there is no build step and there are no dependencies.
 - [license](#license)
 - [support](#support)
 
-## quick start
+## quick start :: **locally**
 
 open `index.html` in a browser.
 
@@ -45,7 +45,7 @@ smin(core ~ lattice, halo, 0.2) | plane(p, 1.4)
 
 `p` is the point being sampled and `t` is time in seconds. the last line is the distance to render. `|` is union, `&` is intersection and `~` is subtraction. the full language is described in [docs/language.md](docs/language.md).
 
-## features
+## features!
 
 - lexer and pratt parser with error messages that give a line, column and, for misspelled names, a suggestion.
 - static types (`float`, `vec2`, `vec3`) with generic builtin signatures.
@@ -61,7 +61,7 @@ smin(core ~ lattice, halo, 0.2) | plane(p, 1.4)
 - webgl2 raymarcher that swaps in each new shader without restarting.
 - cpu ray probe, point evaluation and a 2d cross-section view.
 
-## compiler stages
+## compiler stages!
 
 | no. | stage | file | output |
 | --- | --- | --- | --- |
