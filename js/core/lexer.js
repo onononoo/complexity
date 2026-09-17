@@ -1,5 +1,5 @@
 "use strict";
-/* Stage 1: source text → tokens. Line breaks inside parentheses are
+/* stage 1: source text → tokens. line breaks inside parentheses are
    whitespace, so long calls can wrap across lines. */
 
 function lex(src) {
@@ -17,13 +17,13 @@ function lex(src) {
     }
     if (c === " " || c === "\t" || c === "\r") { i++; continue; }
     if (/[0-9]/.test(c) || (c === "." && /[0-9]/.test(src[i + 1] || ""))) {
-      const m = /^(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/.exec(src.slice(i, i + 64));
+      const m = /^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i.exec(src.slice(i, i + 64));
       push("num", parseFloat(m[0]), i, m[0].length);
       i += m[0].length;
       continue;
     }
-    if (/[A-Za-z_]/.test(c)) {
-      const w = /^[A-Za-z_]\w*/.exec(src.slice(i, i + 128))[0];
+    if (/[a-z_]/i.test(c)) {
+      const w = /^[a-z_]\w*/i.exec(src.slice(i, i + 128))[0];
       push(w === "let" || w === "fn" ? "kw" : "id", w, i, w.length);
       i += w.length;
       continue;
@@ -35,7 +35,7 @@ function lex(src) {
       i++;
       continue;
     }
-    throw new CompileError(`Unexpected character “${c}”. Allowed operators are + - * / | & ~ ( ) , . =`, i, 1, "lex");
+    throw new compile_error(`unexpected character “${c}”. allowed operators are + - * / | & ~ ( ) , . =`, i, 1, "lex");
   }
   push("eof", "", src.length, 0);
   return toks;

@@ -1,9 +1,9 @@
 "use strict";
-/* Hash-consed expression DAG. Structurally identical nodes are interned
-   once, which gives common subexpression elimination for free. Node ids are
+/* hash-consed expression dag. structurally identical nodes are interned
+   once, which gives common subexpression elimination for free. node ids are
    assigned in creation order, so ascending id order is a topological order. */
 
-class Graph {
+class expr_graph {
   constructor() {
     this.nodes = [];
     this.index = new Map();

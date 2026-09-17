@@ -1,9 +1,9 @@
 "use strict";
-/* Plain floating point numbers, expressed through the algebra interface
-   shared with DualAlgebra and IntervalAlgebra:
+/* plain floating point numbers, expressed through the algebra interface
+   shared with dualalgebra and intervalalgebra:
      c(v) add sub mul div neg sq sqrt abs min max floor sin cos exp pow value */
 
-const RealAlgebra = {
+const real_algebra = {
   name: "real",
   c: v => v,
   add: (a, b) => a + b,

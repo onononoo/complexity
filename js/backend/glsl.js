@@ -1,14 +1,14 @@
 "use strict";
-/* Stage 5: DAG → GLSL `map` function. Nodes referenced more than once are
+/* stage 5: dag → glsl `map` function. nodes referenced more than once are
    hoisted into temporaries; everything else is inlined. */
 
-function glslLiteral(v) {
+function glsl_literal(v) {
   let s = Number.isInteger(v) && Math.abs(v) < 1e15 ? v.toFixed(1) : String(+v.toPrecision(9));
-  if (!/[.eE]/.test(s)) s += ".0";
+  if (!/[.e]/i.test(s)) s += ".0";
   return v < 0 ? `(${s})` : s;
 }
 
-function balancedOuter(s) {
+function balanced_outer(s) {
   let d = 0;
   for (let i = 0; i < s.length; i++) {
     if (s[i] === "(") d++;
@@ -18,12 +18,12 @@ function balancedOuter(s) {
   return true;
 }
 
-function emitGlsl(g, root, info) {
-  const TY = { f: "float", v2: "vec2", v3: "vec3" };
+function emit_glsl(g, root, info) {
+  const glsl_types = { f: "float", v2: "vec2", v3: "vec3" };
   const lines = [];
   const text = new Map();
   let temps = 0;
-  // Iterative post-order walk so deep programs cannot overflow the JS stack.
+  // iterative post-order walk so deep programs cannot overflow the js stack.
   const stack = [[root.id, false]];
   while (stack.length) {
     const [id, expanded] = stack.pop();
@@ -36,21 +36,21 @@ function emitGlsl(g, root, info) {
     }
     const a = n.args.map(c => text.get(c));
     let s;
-    if (n.op === "const") s = glslLiteral(n.v);
+    if (n.op === "const") s = glsl_literal(n.v);
     else if (n.op === "p" || n.op === "t") s = n.op;
     else if (n.op === "neg") s = `(-${a[0]})`;
     else if (n.op[0] === ".") s = `${a[0]}${n.op}`;
-    else if (n.op.startsWith("call:")) s = `${B[n.op.slice(5)].glsl}(${a.join(", ")})`;
+    else if (n.op.startsWith("call:")) s = `${builtins[n.op.slice(5)].glsl}(${a.join(", ")})`;
     else s = `(${a[0]} ${n.op} ${a[1]})`;
     if (n.args.length && info.refs[id] > 1) {
       const name = "_" + temps++;
-      lines.push(`  ${TY[n.type]} ${name} = ${s};`);
+      lines.push(`  ${glsl_types[n.type]} ${name} = ${s};`);
       s = name;
     }
     text.set(id, s);
   }
   let ret = text.get(root.id);
-  if (ret[0] === "(" && balancedOuter(ret)) ret = ret.slice(1, -1);
-  const src = `float map(vec3 p) {\n  float t = uT;\n${lines.length ? lines.join("\n") + "\n" : ""}  return ${ret};\n}`;
+  if (ret[0] === "(" && balanced_outer(ret)) ret = ret.slice(1, -1);
+  const src = `float map(vec3 p) {\n  float t = ut;\n${lines.length ? lines.join("\n") + "\n" : ""}  return ${ret};\n}`;
   return { src, temps };
 }

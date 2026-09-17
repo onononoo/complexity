@@ -1,9 +1,9 @@
 "use strict";
-/* Orbit camera: drag to rotate, wheel to zoom, click to probe. */
+/* orbit camera: drag to rotate, wheel to zoom, click to probe. */
 
-const CAMERA_DEFAULT = { yaw: 0.65, pitch: 0.3, dist: 5.2 };
-const cam = { ...CAMERA_DEFAULT };
-const CLICK_SLOP = 4;
+const camera_default = { yaw: 0.65, pitch: 0.3, dist: 5.2 };
+const cam = { ...camera_default };
+const click_slop = 4;
 let drag = null;
 
 canvas.addEventListener("pointerdown", e => {
@@ -22,9 +22,9 @@ canvas.addEventListener("pointermove", e => {
 });
 
 canvas.addEventListener("pointerup", e => {
-  if (drag && drag.moved < CLICK_SLOP) {
+  if (drag && drag.moved < click_slop) {
     const rect = canvas.getBoundingClientRect();
-    runProbe(e.clientX - rect.left, e.clientY - rect.top);
+    run_probe(e.clientX - rect.left, e.clientY - rect.top);
   }
   drag = null;
 });
@@ -36,4 +36,4 @@ canvas.addEventListener("wheel", e => {
   cam.dist = Math.min(14, Math.max(1.8, cam.dist * Math.exp(e.deltaY * 0.001)));
 }, { passive: false });
 
-document.getElementById("resetcam").addEventListener("click", () => Object.assign(cam, CAMERA_DEFAULT));
+document.getElementById("resetcam").addEventListener("click", () => Object.assign(cam, camera_default));

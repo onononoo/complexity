@@ -1,7 +1,7 @@
 "use strict";
-/* Register virtual machine for programs produced by compileBytecode. */
+/* register virtual machine for programs produced by compilebytecode. */
 
-class VM {
+class bytecode_vm {
   constructor(prog) {
     this.prog = prog;
     this.mem = new Float64Array(Math.max(2, prog.regs) * 3);
@@ -17,14 +17,14 @@ class VM {
   run(x, y, z, t) {
     const code = this.prog.code, mem = this.mem, out = this.out;
     mem[0] = x; mem[1] = y; mem[2] = z; mem[3] = t;
-    for (let pc = 0; pc < code.length; pc += STRIDE) {
+    for (let pc = 0; pc < code.length; pc += stride) {
       const argc = code[pc + 3];
       for (let i = 0; i < argc; i++) {
         this.reg[i] = code[pc + 4 + 2 * i];
         this.wid[i] = code[pc + 5 + 2 * i];
       }
       const dst = code[pc + 1] * 3, dw = code[pc + 2];
-      applyKernel(KERNELS[code[pc]], dw, argc, this.read, this.wid, code[pc + 10], out);
+      apply_kernel(kernels[code[pc]], dw, argc, this.read, this.wid, code[pc + 10], out);
       for (let k = 0; k < dw; k++) mem[dst + k] = out[k];
     }
     this.evaluations++;

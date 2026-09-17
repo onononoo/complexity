@@ -1,34 +1,34 @@
 "use strict";
-/* Error, warning and status messages below the editor. */
+/* error, warning and status messages below the editor. */
 
-const diagEl = document.getElementById("diag");
+const diag_el = document.getElementById("diag");
 
-const STAGE_LABEL = {
-  lex: "Lexical error",
-  parse: "Syntax error",
-  elab: "Type error",
-  verify: "Verification error",
-  gradient: "Gradient check error",
-  bounds: "Surface localization error",
-  gpu: "GPU error",
+const stage_label = {
+  lex: "lexical error",
+  parse: "syntax error",
+  elab: "type error",
+  verify: "verification error",
+  gradient: "gradient check error",
+  bounds: "surface localization error",
+  gpu: "gpu error",
 };
 
-function renderDiagnostics(src, error, warnings, summary) {
-  diagEl.innerHTML = "";
+function render_diagnostics(src, error, warnings, summary) {
+  diag_el.innerHTML = "";
   const add = (label, msg, pos, len) => {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "msg";
-    const where = pos != null ? (({ line, col }) => ` (line ${line}, column ${col})`)(lineCol(src, pos)) : "";
+    const where = pos != null ? (({ line, col }) => ` (line ${line}, column ${col})`)(line_col(src, pos)) : "";
     b.textContent = `${label}${where}: ${msg}${/[.?!]$/.test(msg) ? "" : "."}`;
     if (pos != null) {
-      b.addEventListener("click", () => { srcEl.focus(); srcEl.setSelectionRange(pos, pos + Math.max(0, len || 0)); });
+      b.addEventListener("click", () => { src_el.focus(); src_el.setSelectionRange(pos, pos + Math.max(0, len || 0)); });
     } else {
       b.dataset.static = "";
     }
-    diagEl.appendChild(b);
+    diag_el.appendChild(b);
   };
-  if (error) add(STAGE_LABEL[error.stage] || "Internal error", error.message, error.pos, error.len);
-  for (const w of warnings) add("Warning", w.msg, w.pos, w.len);
-  if (!error && summary) add("Status", summary, null);
+  if (error) add(stage_label[error.stage] || "internal error", error.message, error.pos, error.len);
+  for (const w of warnings) add("warning", w.msg, w.pos, w.len);
+  if (!error && summary) add("status", summary, null);
 }

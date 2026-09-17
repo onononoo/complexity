@@ -1,5 +1,5 @@
 "use strict";
-/* Deterministic pseudo-random numbers, so analysis results are repeatable. */
+/* deterministic pseudo-random numbers, so analysis results are repeatable. */
 
 function mulberry32(seed) {
   return function () {
@@ -11,6 +11,6 @@ function mulberry32(seed) {
   };
 }
 
-function samplePoint(rnd, extent) {
+function sample_point(rnd, extent) {
   return [rnd() * 2 * extent - extent, rnd() * 2 * extent - extent, rnd() * 2 * extent - extent];
 }

@@ -1,6 +1,6 @@
 "use strict";
-/* CPU ray probe. Rebuilds the shader's camera ray for a clicked pixel and
-   marches it with the bytecode VM, independently of the GPU. */
+/* cpu ray probe. rebuilds the shader's camera ray for a clicked pixel and
+   marches it with the bytecode vm, independently of the gpu. */
 
 const vec = {
   sub: (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]],
@@ -9,7 +9,7 @@ const vec = {
   fmt: a => a.map(v => v.toFixed(4)).join(", "),
 };
 
-function cameraRay(cam, px, py, w, h) {
+function camera_ray(cam, px, py, w, h) {
   const ux = (px - 0.5 * w) / h, uy = ((h - py) - 0.5 * h) / h;
   const cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
   const ro = [cam.dist * sy * cp, cam.dist * sp, cam.dist * cy * cp];
@@ -20,7 +20,7 @@ function cameraRay(cam, px, py, w, h) {
   return { ro, rd };
 }
 
-function marchCpu(vm, ro, rd, t) {
+function march_cpu(vm, ro, rd, t) {
   let d = 0, steps = 0, hit = false;
   for (; steps < 160; steps++) {
     const h = vm.run(ro[0] + rd[0] * d, ro[1] + rd[1] * d, ro[2] + rd[2] * d, t);
@@ -42,16 +42,16 @@ function marchCpu(vm, ro, rd, t) {
   return { hit, steps, d, pos, normal };
 }
 
-function runProbe(px, py) {
-  if (!activeBytecode) return;
-  const vm = new VM(activeBytecode);
+function run_probe(px, py) {
+  if (!active_bytecode) return;
+  const vm = new bytecode_vm(active_bytecode);
   const t0 = performance.now();
-  const { ro, rd } = cameraRay(cam, px, py, canvas.clientWidth, canvas.clientHeight);
-  const r = marchCpu(vm, ro, rd, simTime);
+  const { ro, rd } = camera_ray(cam, px, py, canvas.clientWidth, canvas.clientHeight);
+  const r = march_cpu(vm, ro, rd, sim_time);
   const ms = performance.now() - t0;
   const set = (id, text) => { document.getElementById(id).textContent = text; };
-  set("pr-pixel", `(${Math.round(px)}, ${Math.round(py)}) at t = ${simTime.toFixed(3)} s`);
-  set("pr-hit", r.hit ? "Surface hit" : "No surface hit");
+  set("pr-pixel", `(${Math.round(px)}, ${Math.round(py)}) at t = ${sim_time.toFixed(3)} s`);
+  set("pr-hit", r.hit ? "surface hit" : "no surface hit");
   set("pr-steps", String(r.steps));
   set("pr-len", r.d.toFixed(4));
   set("pr-pos", r.hit ? vec.fmt(r.pos) : "—");
@@ -62,8 +62,8 @@ function runProbe(px, py) {
 
 document.getElementById("evalbtn").addEventListener("click", () => {
   const out = document.getElementById("evalout");
-  if (!activeBytecode) { out.textContent = "No compiled program."; return; }
+  if (!active_bytecode) { out.textContent = "no compiled program."; return; }
   const v = id => parseFloat(document.getElementById(id).value) || 0;
-  const d = new VM(activeBytecode).run(v("ex"), v("ey"), v("ez"), simTime);
-  out.textContent = `Distance: ${d.toFixed(6)}`;
+  const d = new bytecode_vm(active_bytecode).run(v("ex"), v("ey"), v("ez"), sim_time);
+  out.textContent = `distance: ${d.toFixed(6)}`;
 });

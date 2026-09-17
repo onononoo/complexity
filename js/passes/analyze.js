@@ -1,6 +1,6 @@
 "use strict";
-/* Stage 4: reachability from the root and reference counts.
-   Unreachable nodes are dead and are skipped by every backend. */
+/* stage 4: reachability from the root and reference counts.
+   unreachable nodes are dead and are skipped by every backend. */
 
 function analyze(g, root) {
   const refs = new Uint32Array(g.nodes.length);

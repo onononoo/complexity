@@ -1,16 +1,16 @@
 "use strict";
-/* Loads the compiler's browser scripts into one Node VM context, giving
+/* loads the compiler's browser scripts into one node vm context, giving
    them the same shared global scope they have in a page. */
 
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const ROOT = path.resolve(__dirname, "..");
+const project_root = path.resolve(__dirname, "..");
 
-// Same order as the <script> tags in index.html. DOM-dependent files
+// same order as the <script> tags in index.html. dom-dependent files
 // (js/gpu/renderer.js, js/ui/*, and the rest of js/app/) are excluded.
-const SOURCES = [
+const sources = [
   "js/core/errors.js",
   "js/core/mathlib.js",
   "js/core/builtins.js",
@@ -39,14 +39,14 @@ const SOURCES = [
   "js/app/presets.js",
 ];
 
-function createCompilerContext() {
+function create_compiler_context() {
   const context = vm.createContext({
     console,
     performance: { now: () => Number(process.hrtime.bigint()) / 1e6 },
   });
-  const load = file => vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: path.relative(ROOT, file) });
-  for (const f of SOURCES) load(path.join(ROOT, f));
+  const load = file => vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: path.relative(project_root, file) });
+  for (const f of sources) load(path.join(project_root, f));
   return { context, load, run: code => vm.runInContext(code, context) };
 }
 
-module.exports = { createCompilerContext, ROOT };
+module.exports = { create_compiler_context, project_root };

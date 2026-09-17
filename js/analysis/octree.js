@@ -1,22 +1,22 @@
 "use strict";
-/* Surface localisation. Recursively subdivides a cube and evaluates the
-   distance field over each cell with interval arithmetic. A cell whose
+/* surface localisation. recursively subdivides a cube and evaluates the
+   distance field over each cell with interval arithmetic. a cell whose
    interval excludes zero cannot contain the surface and is discarded. */
 
-function localizeSurface(g, root, info, t, depth, extent) {
-  const A = IntervalAlgebra;
-  const tInterval = A.c(t);
+function localize_surface(g, root, info, t, depth, extent) {
+  const alg = interval_algebra;
+  const t_interval = alg.c(t);
   const leaves = [];
-  let evaluated = 0, culledOutside = 0, culledInside = 0;
+  let evaluated = 0, culled_outside = 0, culled_inside = 0;
   const stack = [[0, 0, 0, extent, 0]];
 
   while (stack.length) {
     const [cx, cy, cz, hs, level] = stack.pop();
-    const p = [new Interval(cx - hs, cx + hs), new Interval(cy - hs, cy + hs), new Interval(cz - hs, cz + hs)];
-    const d = evaluateGraph(g, root, info, A, SDF_INTERVAL, p, tInterval);
+    const p = [new interval(cx - hs, cx + hs), new interval(cy - hs, cy + hs), new interval(cz - hs, cz + hs)];
+    const d = evaluate_graph(g, root, info, alg, sdf_interval, p, t_interval);
     evaluated++;
-    if (d.lo > 0) { culledOutside++; continue; }
-    if (d.hi < 0) { culledInside++; continue; }
+    if (d.lo > 0) { culled_outside++; continue; }
+    if (d.hi < 0) { culled_inside++; continue; }
     if (level === depth) { leaves.push([cx, cy, cz, hs]); continue; }
     const q = hs / 2;
     for (const dx of [-q, q]) for (const dy of [-q, q]) for (const dz of [-q, q]) {
@@ -29,10 +29,10 @@ function localizeSurface(g, root, info, t, depth, extent) {
     extent,
     time: t,
     leaves,
-    surfaceLeaves: leaves.length,
-    totalLeaves: 8 ** depth,
+    surface_leaves: leaves.length,
+    total_leaves: 8 ** depth,
     evaluated,
-    culledOutside,
-    culledInside,
+    culled_outside,
+    culled_inside,
   };
 }

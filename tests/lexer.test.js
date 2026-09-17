@@ -2,8 +2,8 @@
 
 test("lexer: produces typed tokens and skips comments", () => {
   const toks = lex("let a = 1.5e2 # comment\np.xz");
-  assertEqual(toks.map(t => t.type).join(" "), "kw id op num sep id op id eof");
-  assertEqual(toks[3].value, 150);
+  assert_equal(toks.map(t => t.type).join(" "), "kw id op num sep id op id eof");
+  assert_equal(toks[3].value, 150);
 });
 
 test("lexer: line breaks inside parentheses are not separators", () => {
@@ -13,15 +13,15 @@ test("lexer: line breaks inside parentheses are not separators", () => {
 
 test("lexer: consecutive blank lines collapse into one separator", () => {
   const toks = lex("a\n\n\nb");
-  assertEqual(toks.filter(t => t.type === "sep").length, 1);
+  assert_equal(toks.filter(t => t.type === "sep").length, 1);
 });
 
 test("lexer: leading-dot numbers", () => {
-  assertEqual(lex(".25")[0].value, 0.25);
+  assert_equal(lex(".25")[0].value, 0.25);
 });
 
 test("lexer: reports unexpected characters with a position", () => {
-  const e = assertThrows(() => lex("a $ b"), /Unexpected character/);
-  assertEqual(e.pos, 2);
-  assertEqual(e.stage, "lex");
+  const e = assert_throws(() => lex("a $ b"), /unexpected character/);
+  assert_equal(e.pos, 2);
+  assert_equal(e.stage, "lex");
 });

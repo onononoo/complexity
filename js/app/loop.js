@@ -1,52 +1,52 @@
 "use strict";
-/* Animation clock, adaptive render resolution and frame statistics. */
+/* animation clock, adaptive render resolution and frame statistics. */
 
 let paused = true;
-let simTime = 3.0;
-let lastFrame = performance.now();
-let renderScale = 1;
-let frameEma = 1 / 60;
-let lastAdapt = 0;
-let fpsAcc = 0;
-let fpsFrames = 0;
+let sim_time = 3.0;
+let last_frame = performance.now();
+let render_scale = 1;
+let frame_ema = 1 / 60;
+let last_adapt = 0;
+let fps_acc = 0;
+let fps_frames = 0;
 
-const statusEl = document.getElementById("status");
-const pauseBtn = document.getElementById("pause");
+const status_el = document.getElementById("status");
+const pause_btn = document.getElementById("pause");
 
-function setPauseLabel() {
-  pauseBtn.textContent = paused ? "Resume" : "Pause";
+function set_pause_label() {
+  pause_btn.textContent = paused ? "resume" : "pause";
 }
 
-function adaptResolution(now, dt) {
-  frameEma = frameEma * 0.9 + dt * 0.1;
-  if (now - lastAdapt < 500) return;
-  lastAdapt = now;
-  if (frameEma > 1 / 40 && renderScale > 0.35) renderScale = Math.max(0.35, renderScale * 0.82);
-  else if (frameEma < 1 / 55 && renderScale < 1) renderScale = Math.min(1, renderScale * 1.12);
+function adapt_resolution(now, dt) {
+  frame_ema = frame_ema * 0.9 + dt * 0.1;
+  if (now - last_adapt < 500) return;
+  last_adapt = now;
+  if (frame_ema > 1 / 40 && render_scale > 0.35) render_scale = Math.max(0.35, render_scale * 0.82);
+  else if (frame_ema < 1 / 55 && render_scale < 1) render_scale = Math.min(1, render_scale * 1.12);
 }
 
 function frame(now) {
-  const dt = Math.min(0.1, (now - lastFrame) / 1000);
-  lastFrame = now;
-  if (!paused) simTime += dt;
-  adaptResolution(now, dt);
+  const dt = Math.min(0.1, (now - last_frame) / 1000);
+  last_frame = now;
+  if (!paused) sim_time += dt;
+  adapt_resolution(now, dt);
 
-  fpsAcc += dt;
-  fpsFrames++;
-  if (fpsAcc > 1) {
-    statusEl.textContent =
-      `Frame rate: ${(fpsFrames / fpsAcc).toFixed(0)} frames per second. ` +
-      `Render scale: ${Math.round(renderScale * 100)} percent. Time: ${simTime.toFixed(1)} seconds. ` +
-      `Animation: ${paused ? "paused" : "running"}.`;
-    fpsAcc = 0;
-    fpsFrames = 0;
+  fps_acc += dt;
+  fps_frames++;
+  if (fps_acc > 1) {
+    status_el.textContent =
+      `frame rate: ${(fps_frames / fps_acc).toFixed(0)} frames per second. ` +
+      `render scale: ${Math.round(render_scale * 100)} percent. time: ${sim_time.toFixed(1)} seconds. ` +
+      `animation: ${paused ? "paused" : "running"}.`;
+    fps_acc = 0;
+    fps_frames = 0;
   }
 
-  drawFrame(cam, simTime, renderScale);
+  draw_frame(cam, sim_time, render_scale);
   requestAnimationFrame(frame);
 }
 
-pauseBtn.addEventListener("click", () => {
+pause_btn.addEventListener("click", () => {
   paused = !paused;
-  setPauseLabel();
+  set_pause_label();
 });

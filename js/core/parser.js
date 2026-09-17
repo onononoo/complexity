@@ -1,8 +1,8 @@
 "use strict";
-/* Stage 2: tokens → AST, using a Pratt (top-down operator precedence) parser. */
+/* stage 2: tokens → ast, using a pratt (top-down operator precedence) parser. */
 
-const INFIX = { "|": 10, "&": 20, "~": 20, "+": 30, "-": 30, "*": 40, "/": 40 };
-const PREFIX_NEG = 50;
+const infix = { "|": 10, "&": 20, "~": 20, "+": 30, "-": 30, "*": 40, "/": 40 };
+const prefix_neg = 50;
 
 function parse(toks) {
   let k = 0;
@@ -10,9 +10,9 @@ function parse(toks) {
   const next = () => toks[k++];
   const is = (type, v) => peek().type === type && (v === undefined || peek().value === v);
   const describe = t => t.type === "eof" ? "the end of the program" : t.type === "sep" ? "the end of the line" : `“${t.value}”`;
-  const fail = (msg, t) => { throw new CompileError(msg, t.pos, Math.max(1, t.len), "parse"); };
+  const fail = (msg, t) => { throw new compile_error(msg, t.pos, Math.max(1, t.len), "parse"); };
   const expect = (type, v, what) => {
-    if (!is(type, v)) fail(`Expected ${what}, found ${describe(peek())}`, peek());
+    if (!is(type, v)) fail(`expected ${what}, found ${describe(peek())}`, peek());
     return next();
   };
 
@@ -22,15 +22,15 @@ function parse(toks) {
     if (t.type === "num") left = { k: "num", v: t.value, pos: t.pos, len: t.len };
     else if (t.type === "id") left = { k: "id", name: t.value, pos: t.pos, len: t.len };
     else if (t.type === "op" && t.value === "(") { left = expr(0); expect("op", ")", "“)” to close the group"); }
-    else if (t.type === "op" && t.value === "-") left = { k: "neg", a: expr(PREFIX_NEG), pos: t.pos, len: 1 };
+    else if (t.type === "op" && t.value === "-") left = { k: "neg", a: expr(prefix_neg), pos: t.pos, len: 1 };
     else if (t.type === "kw") fail(`“${t.value}” starts a declaration and cannot appear inside an expression`, t);
-    else fail(`Expected a value, found ${describe(t)}`, t);
+    else fail(`expected a value, found ${describe(t)}`, t);
 
     for (;;) {
       const o = peek();
       if (o.type !== "op") break;
       if (o.value === "(") {
-        if (left.k !== "id") fail("Only named functions can be called", o);
+        if (left.k !== "id") fail("only named functions can be called", o);
         next();
         const args = [];
         if (!is("op", ")")) do args.push(expr(0)); while (is("op", ",") && next());
@@ -44,7 +44,7 @@ function parse(toks) {
         left = { k: "mem", obj: left, field: f.value, pos: f.pos, len: f.len };
         continue;
       }
-      const bp = INFIX[o.value];
+      const bp = infix[o.value];
       if (bp === undefined || bp <= rbp) break;
       next();
       left = { k: "bin", op: o.value, a: left, b: expr(bp), pos: o.pos, len: 1 };
@@ -54,10 +54,10 @@ function parse(toks) {
 
   const decls = [];
   let result = null;
-  const skipSeps = () => { while (is("sep")) next(); };
-  skipSeps();
+  const skip_seps = () => { while (is("sep")) next(); };
+  skip_seps();
   while (!is("eof")) {
-    if (result) throw new CompileError("Only the last line can be a bare expression. Name this one with “let”", result.pos, result.len, "parse");
+    if (result) throw new compile_error("only the last line can be a bare expression. name this one with “let”", result.pos, result.len, "parse");
     if (is("kw", "let")) {
       next();
       const name = expect("id", undefined, "a name after “let”");
@@ -79,18 +79,18 @@ function parse(toks) {
       result = expr(0);
     }
     if (!is("eof")) expect("sep", undefined, "a line break");
-    skipSeps();
+    skip_seps();
   }
   if (!result) {
     const eof = toks[toks.length - 1];
-    throw new CompileError("The program needs a final line: the distance expression to render", eof.pos, 0, "parse");
+    throw new compile_error("the program needs a final line: the distance expression to render", eof.pos, 0, "parse");
   }
   return { decls, result };
 }
 
-function countAst(n) {
+function count_ast(n) {
   if (!n || typeof n !== "object") return 0;
-  if (Array.isArray(n)) return n.reduce((s, x) => s + countAst(x), 0);
-  if (n.decls) return countAst(n.decls) + countAst(n.result);
-  return 1 + countAst(n.a) + countAst(n.b) + countAst(n.obj) + countAst(n.args) + countAst(n.body);
+  if (Array.isArray(n)) return n.reduce((s, x) => s + count_ast(x), 0);
+  if (n.decls) return count_ast(n.decls) + count_ast(n.result);
+  return 1 + count_ast(n.a) + count_ast(n.b) + count_ast(n.obj) + count_ast(n.args) + count_ast(n.body);
 }

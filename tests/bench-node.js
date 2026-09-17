@@ -1,22 +1,22 @@
 "use strict";
-/* Prints per-stage compile times for each example program.
+/* prints per-stage compile times for each example program.
 
-   Usage: node tests/bench-node.js [repetitions] */
+   usage: node tests/bench-node.js [repetitions] */
 
-const { createCompilerContext } = require("./load");
+const { create_compiler_context } = require("./load");
 
-const { context, run } = createCompilerContext();
+const { context, run } = create_compiler_context();
 context.__reps = Math.max(1, parseInt(process.argv[2], 10) || 20);
 
 const rows = run(`
-  PRESETS.map(preset => {
+  presets.map(preset => {
     const totals = {};
     for (let i = 0; i < __reps; i++) {
-      const r = compileSource(preset.src, { time: 1 });
-      if (!r.ok) throw new Error(preset.name + ": " + r.error.message);
+      const r = compile_source(preset.src, { time: 1 });
+      if (!r.ok) throw new error(preset.name + ": " + r.error.message);
       for (const s of r.stages) totals[s.name] = (totals[s.name] || 0) + s.ms;
     }
-    return { name: preset.name, stages: CPU_STAGES.map(n => [n, totals[n] / __reps]) };
+    return { name: preset.name, stages: cpu_stages.map(n => [n, totals[n] / __reps]) };
   })
 `);
 
