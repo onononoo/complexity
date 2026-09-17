@@ -1,10 +1,10 @@
-# complexity
+# complexity!!1!!!1111!1!
 
 this is a compiler for a small language what describe 3d shapes as signed distance fields. it all run in the browser. programs gets compiled into a glsl shader for the gpu and into register bytecode for a javascript virtual machine, the bytecode also get saved in a binary format, and it make a triangle mesh to. the compiler check its own output using a reference evaluator, automatic differentiation and interval arithmetic.
 
 no build step. no dependencies neither.
 
-## contents
+## tabbel of contents
 
 - [quick start](#quick-start)
 - [example program](#example-program)
@@ -18,7 +18,7 @@ no build step. no dependencies neither.
 - [license](#license)
 - [support](#support)
 
-## quick start
+## quick start :: **locally**
 
 open `index.html` in a browser.
 
@@ -46,7 +46,7 @@ smin(core ~ lattice, halo, 0.2) | plane(p, 1.4)
 
 `p` is the point that gets sampled and `t` is time in second. last line is the distance that get rendered. `|` is union, `&` is intersection and `~` is subtraction. the hole language is in [docs/language.md](docs/language.md).
 
-## features
+## features!
 
 - lexer and pratt parser, errors tells u the line and column and if u spell a name wrong it suggest one.
 - static types (`float`, `vec2`, `vec3`) with generic builtin signatures.
@@ -66,7 +66,7 @@ smin(core ~ lattice, halo, 0.2) | plane(p, 1.4)
 - webgl2 raymarcher that swap each new shader in without restarting.
 - cpu ray probe, point evaluation and a 2d cross-section.
 
-## compiler stages
+## compiler stages!
 
 | no. | stage | file | output |
 | --- | --- | --- | --- |
