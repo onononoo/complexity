@@ -1,6 +1,7 @@
 "use strict";
-/* stage 5: dag → glsl `map` function. nodes referenced more than once are
-   hoisted into temporaries; everything else is inlined. */
+/* stage 6: dag → glsl `map` function. nodes referenced more than once are
+   stored in temporaries; everything else is inlined. nodes chosen by the
+   time hoisting pass are replaced by their uniform array slot. */
 
 function glsl_literal(v) {
   let s = Number.isInteger(v) && Math.abs(v) < 1e15 ? v.toFixed(1) : String(+v.toPrecision(9));
@@ -18,7 +19,7 @@ function balanced_outer(s) {
   return true;
 }
 
-function emit_glsl(g, root, info) {
+function emit_glsl(g, root, info, hoist) {
   const glsl_types = { f: "float", v2: "vec2", v3: "vec3" };
   const lines = [];
   const text = new Map();
@@ -29,6 +30,11 @@ function emit_glsl(g, root, info) {
     const [id, expanded] = stack.pop();
     if (text.has(id)) continue;
     const n = g.nodes[id];
+    const slot = hoist && hoist.slots.get(id);
+    if (slot) {
+      text.set(id, slot.glsl);
+      continue;
+    }
     if (!expanded) {
       stack.push([id, true]);
       for (let i = n.args.length - 1; i >= 0; i--) if (!text.has(n.args[i])) stack.push([n.args[i], false]);
@@ -51,6 +57,8 @@ function emit_glsl(g, root, info) {
   }
   let ret = text.get(root.id);
   if (ret[0] === "(" && balanced_outer(ret)) ret = ret.slice(1, -1);
-  const src = `float map(vec3 p) {\n  float t = ut;\n${lines.length ? lines.join("\n") + "\n" : ""}  return ${ret};\n}`;
-  return { src, temps };
+  const decls = hoist ? hoist_uniform_declarations(hoist) : [];
+  const body = `float map(vec3 p) {\n  float t = ut;\n${lines.length ? lines.join("\n") + "\n" : ""}  return ${ret};\n}`;
+  const src = (decls.length ? decls.join("\n") + "\n" : "") + body;
+  return { src, temps, hoisted: hoist ? hoist.slots.size : 0 };
 }

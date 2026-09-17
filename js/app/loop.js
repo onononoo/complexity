@@ -35,9 +35,9 @@ function frame(now) {
   fps_frames++;
   if (fps_acc > 1) {
     status_el.textContent =
-      `frame rate: ${(fps_frames / fps_acc).toFixed(0)} frames per second. ` +
-      `render scale: ${Math.round(render_scale * 100)} percent. time: ${sim_time.toFixed(1)} seconds. ` +
-      `animation: ${paused ? "paused" : "running"}.`;
+      `fps is ${(fps_frames / fps_acc).toFixed(0)}. ` +
+      `render scale is ${Math.round(render_scale * 100)} percent. time is ${sim_time.toFixed(1)} second. ` +
+      `animation is ${paused ? "paused" : "going"}.`;
     fps_acc = 0;
     fps_frames = 0;
   }

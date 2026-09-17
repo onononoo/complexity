@@ -30,4 +30,12 @@ class bytecode_vm {
     this.evaluations++;
     return mem[this.prog.root * 3];
   }
+
+  /* like run, but copies every component of a vector result into `out`. */
+  run_into(x, y, z, t, out) {
+    this.run(x, y, z, t);
+    const base = this.prog.root * 3, w = this.prog.root_width;
+    for (let k = 0; k < w; k++) out[k] = this.mem[base + k];
+    return w;
+  }
 }

@@ -4,12 +4,16 @@
 const diag_el = document.getElementById("diag");
 
 const stage_label = {
-  lex: "lexical error",
+  lex: "lexer error",
   parse: "syntax error",
   elab: "type error",
-  verify: "verification error",
-  gradient: "gradient check error",
-  bounds: "surface localization error",
+  verify: "verify error",
+  gradient: "gradient checking error",
+  bounds: "surface localize error",
+  mesh: "mesh extract error",
+  hoist: "hoisting error",
+  serialize: "binary format error",
+  refine: "refine error",
   gpu: "gpu error",
 };
 
@@ -28,7 +32,7 @@ function render_diagnostics(src, error, warnings, summary) {
     }
     diag_el.appendChild(b);
   };
-  if (error) add(stage_label[error.stage] || "internal error", error.message, error.pos, error.len);
+  if (error) add(stage_label[error.stage] || "internal error happen", error.message, error.pos, error.len);
   for (const w of warnings) add("warning", w.msg, w.pos, w.len);
   if (!error && summary) add("status", summary, null);
 }

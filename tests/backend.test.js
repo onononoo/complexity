@@ -16,10 +16,10 @@ test("backend: every example compiles through all cpu stages", () => {
 });
 
 test("backend: glsl output declares map and hoists shared values", () => {
-  const r = compile_source("let s = sin(t)\nsphere(p, 1.0 + s * s)");
+  const r = compile_source("let s = sin(p.x)\nsphere(p, 1.0 + s * s)");
   assert(r.glsl.startsWith("float map(vec3 p) {"), r.glsl);
   assert_equal(r.temps, 1);
-  assert(/float _0 = sin\(t\);/.test(r.glsl), r.glsl);
+  assert(/float _0 = sin\(p\.x\);/.test(r.glsl), r.glsl);
 });
 
 test("backend: glsl literals always contain a decimal point", () => {

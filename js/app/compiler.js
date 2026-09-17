@@ -2,7 +2,7 @@
 /* the cpu side of the pipeline, free of any dom access so it can run under
    node for tests. returns every intermediate product plus per-stage timing. */
 
-const cpu_stages = ["lex", "parse", "elab", "opt", "emit", "bytecode", "verify", "gradient", "bounds"];
+const cpu_stages = ["lex", "parse", "elab", "opt", "hoist", "emit", "bytecode", "serialize", "verify", "gradient", "bounds", "mesh", "refine"];
 
 const compiler_defaults = {
   time: 0,
@@ -11,6 +11,9 @@ const compiler_defaults = {
   bounds_depth: 4,
   bounds_extent: 3,
   gradient_warning: 1.5,
+  mesh_resolution: 24,
+  mesh_extent: 3,
+  refine_iterations: 4,
 };
 
 function format_small(v) {
@@ -43,11 +46,21 @@ function compile_source(src, options) {
 
     r.info = run("opt", () => analyze(r.g, r.root), v => `${v.reachable} live; ${v.dead} dead`);
 
-    const glsl = run("emit", () => emit_glsl(r.g, r.root, r.info), v => `${v.src.split("\n").length} lines`);
+    r.hoist = run("hoist", () => hoist_time_invariants(r.g, r.root, r.info), v => `${v.slots.size} values moved to per-frame uniforms`);
+
+    const glsl = run("emit", () => emit_glsl(r.g, r.root, r.info, r.hoist), v => `${v.src.split("\n").length} lines`);
     r.glsl = glsl.src;
     r.temps = glsl.temps;
 
-    r.bytecode = run("bytecode", () => compile_bytecode(r.g, r.root, r.info), v => `${v.count} instructions; ${v.regs} registers`);
+    r.bytecode = run("bytecode", () => compile_bytecode(r.g, r.root, r.info), v => `${v.count} instructions; ${v.regs} registers; ${v.fused} fused`);
+
+    r.binary = run("serialize", () => {
+      const bytes = serialize_bytecode(r.bytecode);
+      if (!programs_equal(deserialize_bytecode(bytes), r.bytecode)) {
+        throw new compile_error("bytecode did not survive a round trip through the binary format", null, 0, "serialize");
+      }
+      return bytes;
+    }, v => `${v.length} bytes; crc32 ${hex32(crc32(v, 0, v.length - 4))}`);
 
     r.verify = run("verify", () => {
       const v = verify_bytecode(r.g, r.root, r.info, r.bytecode, opt.verify_samples);
@@ -69,6 +82,13 @@ function compile_source(src, options) {
 
     r.bounds = run("bounds", () => localize_surface(r.g, r.root, r.info, opt.time, opt.bounds_depth, opt.bounds_extent),
       v => `${v.surface_leaves} of ${v.total_leaves} cells may contain the surface`);
+
+    r.mesh = run("mesh", () => extract_mesh(r.bytecode, opt.time, opt.mesh_resolution, opt.mesh_extent),
+      v => `${v.vertex_count} vertices; ${v.triangle_count} triangles; euler ${v.euler}`);
+    r.mesh_raw = r.mesh;
+
+    r.mesh = run("refine", () => refine_mesh(r.g, r.root, r.info, r.mesh_raw, opt.time, opt.refine_iterations),
+      v => `mean |f| ${format_small(v.refinement.mean_before)} → ${format_small(v.refinement.mean_after)}`);
 
     r.ok = true;
   } catch (e) {

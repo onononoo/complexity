@@ -1,33 +1,53 @@
-/* only what is needed for the page to function. everything else is the
-   browser's default style. */
+/* hardly any style. it look like this on purpose ok. */
 
 [hidden] { display: none !important; }
-html, body { background: #ffffff; color: #000000; }
-body { margin: 0; }
-.page { max-width: 860px; margin: 0 auto; padding-inline: 16px; padding-block: 1px 24px; }
+html, body { color: #000000; background-color: #c0c0c0; }
+body {
+  margin: 0;
+  font-family: "times new roman", times, serif;
+  font-size: 15px;
+  /* dithered grey like a old desktop */
+  background-image: repeating-conic-gradient(#c0c0c0 0% 25%, #b8b8b8 0% 50%);
+  background-size: 2px 2px;
+}
+.page { padding-inline: 16px; padding-block: 4px 40px; }
+
+.titlebar { background: #000080; color: #ffffff; font: bold 13px arial, helvetica, sans-serif; padding: 2px 4px; margin: 6px 0 2px; max-width: 640px; }
+.bar { background: #808080; color: #ffffff; font: bold 13px arial, helvetica, sans-serif; padding: 1px 4px; margin: 4px 0; max-width: 640px; }
+.small { font-size: 12px; }
+p { margin: 4px 0; max-width: 700px; }
+hr { height: 3px; border: 1px inset #ffffff; margin: 8px 0; }
+a { color: #0000ee; }
+a:visited { color: #551a8b; }
 
 .tablewrap { overflow-x: auto; }
-table { border-collapse: collapse; }
-th, td { border: 1px solid #000000; padding: 1px 4px; text-align: left; vertical-align: top; }
-th[scope="row"] { font-weight: normal; }
-tr[data-state="skip"] td { color: #808080; }
-.tabs button[aria-selected="true"] { font-weight: bold; }
+table { background: #ffffff; border-color: #808080; }
+th, td { padding: 0 3px; text-align: left; vertical-align: top; font-weight: normal; }
+th { background: #d4d0c8; }
+td.pm, td.pt { font-family: "courier new", courier, monospace; font-size: 12px; }
+td.pt { white-space: nowrap; }
+tr[data-state="fail"] td { background: #ff8080; }
+tr[data-state="skip"] td { color: #808080; background: #e0e0e0; }
+.tabs button[aria-selected="true"] { border-style: inset; font-weight: bold; }
 
-.editor { display: grid; grid-template-columns: auto minmax(0, 1fr); height: 320px; border: 1px solid #000000; }
-.gutter { font: 13px/16px monospace; color: #808080; text-align: right; padding: 2px 4px; overflow: hidden; user-select: none; border-right: 1px solid #000000; white-space: pre; }
+.editor { display: grid; grid-template-columns: auto minmax(0, 1fr); height: 280px; max-width: 600px; border: 2px inset #ffffff; background: #ffffff; }
+.gutter { font: 13px/16px "courier new", courier, monospace; color: #808080; text-align: right; padding: 2px 3px; overflow: hidden; user-select: none; border-right: 1px dotted #808080; background: #ffffcc; white-space: pre; }
 .code { position: relative; min-width: 0; }
-.code pre, .code textarea { position: absolute; inset: 0; margin: 0; padding: 2px 4px; font: 13px/16px monospace; tab-size: 2; white-space: pre; border: 0; box-sizing: border-box; }
+.code pre, .code textarea { position: absolute; inset: 0; margin: 0; padding: 2px 3px; font: 13px/16px "courier new", courier, monospace; tab-size: 2; white-space: pre; border: 0; box-sizing: border-box; }
 .code pre { overflow: hidden; pointer-events: none; color: #000000; }
 .code textarea { width: 100%; height: 100%; resize: none; background: transparent; color: transparent; caret-color: #000000; overflow: auto; outline: none; }
-.code textarea::selection { background: #c0c0c0; color: transparent; }
-.code mark { background: none; color: inherit; text-decoration: underline; }
+.code textarea::selection { background: #000080; color: transparent; }
+.code mark { background: #ffff00; color: inherit; text-decoration: underline wavy #ff0000; }
 
+.diag { max-width: 600px; }
 .diag:empty { display: none; }
-.msg { display: block; text-align: left; background: none; border: 0; padding: 0; margin: 4px 0; font: inherit; color: inherit; cursor: pointer; }
+.msg { display: block; text-align: left; background: #ffffe1; border: 1px solid #000000; padding: 1px 3px; margin: 2px 0; font: 12px arial, helvetica, sans-serif; color: #000000; cursor: pointer; width: 100%; }
 .msg[data-static] { cursor: default; }
 
-#view { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 3; height: auto; background: #808080; touch-action: none; }
-#section { display: block; width: 300px; max-width: 100%; height: auto; aspect-ratio: 1; border: 1px solid #000000; image-rendering: pixelated; }
+#view { display: block; width: 400px; max-width: 100%; aspect-ratio: 4 / 3; height: auto; background: #808080; border: 2px inset #ffffff; touch-action: none; }
+#section { display: block; width: 256px; max-width: 100%; height: auto; aspect-ratio: 1; border: 2px inset #ffffff; image-rendering: pixelated; }
 
-.out { height: 300px; overflow: auto; border: 1px solid #000000; padding: 2px 4px; margin: 0; }
-dl.reftable dd { margin-left: 2em; margin-bottom: 4px; }
+.out { height: 260px; max-width: 600px; overflow: auto; border: 2px inset #ffffff; background: #ffffff; padding: 2px 3px; margin: 0; font-size: 11px; }
+dl.reftable { max-width: 600px; }
+dl.reftable dt { font-family: "courier new", courier, monospace; font-size: 13px; }
+dl.reftable dd { margin-left: 24px; margin-bottom: 2px; font-size: 13px; }

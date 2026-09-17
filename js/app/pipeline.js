@@ -1,5 +1,5 @@
 "use strict";
-/* runs compilesource, links the gpu shader and updates every section. */
+/* runs compile_source, links the gpu shader and updates every section. */
 
 const page_stages = [...cpu_stages, "gpu"];
 const pipe_rows = Object.fromEntries([...document.querySelectorAll("#pipe tr[data-stage]")].map(tr => [tr.dataset.stage, tr]));
@@ -7,6 +7,7 @@ const pipe_rows = Object.fromEntries([...document.querySelectorAll("#pipe tr[dat
 let last_result = null;
 let active_bytecode = null;
 let active_bounds = null;
+let active_mesh = null;
 
 function set_stage(name, state, metric, ms) {
   const tr = pipe_rows[name];
@@ -27,9 +28,10 @@ function compile() {
   if (!error) {
     active_bytecode = r.bytecode;
     active_bounds = r.bounds;
+    active_mesh = r.mesh;
     const t0 = performance.now();
     try {
-      link_program(r.glsl);
+      link_program(r.glsl, make_hoist_runtime(r.hoist));
       r.stages.push({ name: "gpu", metric: "linked", ms: performance.now() - t0 });
       set_stage("gpu", "ok", "linked", performance.now() - t0);
     } catch (e) {
@@ -44,8 +46,9 @@ function compile() {
   }
 
   highlight(src, error);
-  render_diagnostics(src, error, r.warnings, "compilation completed");
+  render_diagnostics(src, error, r.warnings, "compile is done");
   last_result = r;
   render_output(r);
+  render_mesh_panel(r.error ? null : r.mesh);
   if (!r.error) draw_section();
 }

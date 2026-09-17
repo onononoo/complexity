@@ -12,6 +12,7 @@ const project_root = path.resolve(__dirname, "..");
 // (js/gpu/renderer.js, js/ui/*, and the rest of js/app/) are excluded.
 const sources = [
   "js/core/errors.js",
+  "js/core/crc32.js",
   "js/core/mathlib.js",
   "js/core/builtins.js",
   "js/core/lexer.js",
@@ -21,6 +22,7 @@ const sources = [
   "js/passes/rewrite.js",
   "js/passes/elaborate.js",
   "js/passes/analyze.js",
+  "js/passes/hoist.js",
   "js/algebra/real.js",
   "js/algebra/dual.js",
   "js/algebra/interval.js",
@@ -30,11 +32,15 @@ const sources = [
   "js/backend/kernels.js",
   "js/backend/bytecode.js",
   "js/backend/vm.js",
+  "js/backend/serialize.js",
   "js/backend/evaluator.js",
+  "js/backend/hoist-runtime.js",
   "js/analysis/random.js",
   "js/analysis/verify.js",
   "js/analysis/gradient.js",
   "js/analysis/octree.js",
+  "js/analysis/mesh.js",
+  "js/analysis/refine.js",
   "js/app/compiler.js",
   "js/app/presets.js",
 ];

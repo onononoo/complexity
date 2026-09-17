@@ -18,7 +18,7 @@ function draw_section() {
   const ctx = section_canvas.getContext("2d");
   const n = section_canvas.width;
   if (!active_bytecode) {
-    section_caption.textContent = "not drawn. there is no compiled program.";
+    section_caption.textContent = "not drawed. theres no compiled program.";
     return;
   }
   const y = parseFloat(section_y_el.value) || 0;
@@ -53,10 +53,10 @@ function draw_section() {
   }
 
   const ms = performance.now() - t0;
-  const bounds_note = active_bounds ? ` octree cells were computed at t = ${active_bounds.time.toFixed(2)} s.` : "";
+  const bounds_note = active_bounds ? ` octree cells was computed at t = ${active_bounds.time.toFixed(2)} s.` : "";
   section_caption.textContent =
-    `figure 1. plane y = ${y}, x and z from −${section_extent} to ${section_extent}, t = ${sim_time.toFixed(2)} s. ` +
-    `${n * n} evaluations in ${ms.toFixed(1)} ms. ${outlined} cells outlined.${bounds_note}`;
+    `figure 1. plane at y = ${y}, x and z goes from −${section_extent} to ${section_extent}, t = ${sim_time.toFixed(2)} s. ` +
+    `done ${n * n} evaluation in ${ms.toFixed(1)} ms. ${outlined} cell is outlined.${bounds_note}`;
 }
 
 document.getElementById("section-draw").addEventListener("click", draw_section);

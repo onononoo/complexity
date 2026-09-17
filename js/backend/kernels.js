@@ -56,6 +56,8 @@ def_kernel("roty", { kind: "flatv", fn: (f, out) => math_lib.rot_y(f[0], f[1], f
 def_kernel("rotz", { kind: "flatv", fn: (f, out) => math_lib.rot_z(f[0], f[1], f[2], f[3], out) });
 def_kernel("rep", { kind: "flatv", fn: (f, out) => math_lib.rep(f[0], f[1], f[2], f[3], out) });
 def_kernel("twist", { kind: "flatv", fn: (f, out) => math_lib.twist(f[0], f[1], f[2], f[3], out) });
+// bytecode-only kernel produced by fusion in bytecode.js. keep it last so older opcodes dont move.
+def_kernel("muladd", cw(3, (a, b, c) => a * b + c));
 
 const arith_kernel = { "+": "add", "-": "sub", "*": "mul", "/": "div", neg: "neg" };
 
