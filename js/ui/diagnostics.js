@@ -5,8 +5,8 @@ const diag_el = document.getElementById("diag");
 
 const stage_label = {
   lex: "lexer error",
-  parse: "syntax error",
-  elab: "type error",
+  parse: "syntax error's",
+  elab: "type error's",
   verify: "verify error",
   gradient: "gradient checking error",
   bounds: "surface localize error",

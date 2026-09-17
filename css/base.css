@@ -13,6 +13,7 @@ body {
 .page { padding-inline: 16px; padding-block: 4px 40px; }
 
 .titlebar { background: #000080; color: #ffffff; font: bold 13px arial, helvetica, sans-serif; padding: 2px 4px; margin: 6px 0 2px; max-width: 640px; }
+.titleicon { vertical-align: -3px; border: 1px solid #ffffff; }
 .bar { background: #808080; color: #ffffff; font: bold 13px arial, helvetica, sans-serif; padding: 1px 4px; margin: 4px 0; max-width: 640px; }
 .small { font-size: 12px; }
 p { margin: 4px 0; max-width: 700px; }

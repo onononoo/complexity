@@ -46,7 +46,7 @@ function compile() {
   }
 
   highlight(src, error);
-  render_diagnostics(src, error, r.warnings, "compile is done");
+  render_diagnostics(src, error, r.warnings, "compile be done");
   last_result = r;
   render_output(r);
   render_mesh_panel(r.error ? null : r.mesh);

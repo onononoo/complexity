@@ -20,12 +20,12 @@ function render_mesh_panel(mesh) {
   mesh_cells.f.textContent = String(mesh.triangle_count);
   mesh_cells.closed.textContent = mesh.closed
     ? "yes"
-    : `no, ${mesh.boundary_edges} edge are on the boundary`;
-  mesh_cells.euler.textContent = mesh.closed ? String(mesh.euler) : `${mesh.euler} (dont mean much, its open)`;
+    : `no, ${mesh.boundary_edges} edge's is on the boundary`;
+  mesh_cells.euler.textContent = mesh.closed ? String(mesh.euler) : `${mesh.euler} (dont means much, its open)`;
   mesh_cells.area.textContent = mesh.area.toFixed(4);
-  mesh_cells.volume.textContent = mesh.closed ? mesh.volume.toFixed(4) : "cant tell, mesh is open";
+  mesh_cells.volume.textContent = mesh.closed ? mesh.volume.toFixed(4) : "cant tell, the mesh be open";
   const rf = mesh.refinement;
   mesh_cells.refine.textContent = rf
-    ? `avg distance to surface was ${rf.mean_before.toExponential(2)} now its ${rf.mean_after.toExponential(2)} (${rf.steps} newton step, ${rf.reverted} put back)`
+    ? `avg distance to surface were ${rf.mean_before.toExponential(2)} now it be ${rf.mean_after.toExponential(2)} (${rf.steps} newton step's, ${rf.reverted} got putted back)`
     : "—";
 }

@@ -51,7 +51,7 @@ function run_probe(px, py) {
   const ms = performance.now() - t0;
   const set = (id, text) => { document.getElementById(id).textContent = text; };
   set("pr-pixel", `(${Math.round(px)}, ${Math.round(py)}) at t = ${sim_time.toFixed(3)} s`);
-  set("pr-hit", r.hit ? "it hit the surface" : "didnt hit nothing");
+  set("pr-hit", r.hit ? "it hitted the surface" : "it didnt hit nothing");
   set("pr-steps", String(r.steps));
   set("pr-len", r.d.toFixed(4));
   set("pr-pos", r.hit ? vec.fmt(r.pos) : "—");
@@ -62,8 +62,8 @@ function run_probe(px, py) {
 
 document.getElementById("evalbtn").addEventListener("click", () => {
   const out = document.getElementById("evalout");
-  if (!active_bytecode) { out.textContent = "theres no compiled program."; return; }
+  if (!active_bytecode) { out.textContent = "there aint no compiled program."; return; }
   const v = id => parseFloat(document.getElementById(id).value) || 0;
   const d = new bytecode_vm(active_bytecode).run(v("ex"), v("ey"), v("ez"), sim_time);
-  out.textContent = `distance is ${d.toFixed(6)}`;
+  out.textContent = `distance be ${d.toFixed(6)}`;
 });

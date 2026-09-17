@@ -1,14 +1,15 @@
 <meta charset="utf-8">
 <title>complexity</title>
+<link rel="icon" type="image/jpeg" href="kara.jpg">
 <link rel="stylesheet" href="css/base.css">
 
 <div class="page">
-<div class="titlebar">complexity</div>
-<p class="small">document revision 6. last update 16 september 2026. best viewed in a browser at 800x600 or bigger.</p>
+<div class="titlebar"><img class="titleicon" src="kara.jpg" alt="" width="16" height="16"> complexity</div>
+<p class="small">document revision 7. last updated at 16 september 2026. best view in a browser at 800x600 or more bigger.</p>
 <hr>
 
 <div class="bar">1. introduction</div>
-<p>this page have a compiler on it for signed distance field programs. when u change the program in section 3 it get compiled again automaticly. results for every compiler stage is in section 2. the language is explain in section 10.</p>
+<p>this page got a compiler on it for signed distance field program's. when u changes the program in section 3 it get compile again automaticly. result's for all the compiler stage is at section 2. the language get explain in section 10.</p>
 <hr>
 
 <div class="bar">2. compiler stages</div>
@@ -16,13 +17,13 @@
 <table id="pipe" cellspacing="1" cellpadding="1" border="1">
 <tr><th>no.</th><th>stage</th><th>result</th><th>time</th></tr>
 <tr data-stage="lex"><td>2.1</td><td>lexical analysis</td><td class="pm">—</td><td class="pt">—</td></tr>
-<tr data-stage="parse"><td>2.2</td><td>parseing</td><td class="pm">—</td><td class="pt">—</td></tr>
+<tr data-stage="parse"><td>2.2</td><td>parseing's</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="elab"><td>2.3</td><td>type check and elaborating</td><td class="pm">—</td><td class="pt">—</td></tr>
-<tr data-stage="opt"><td>2.4</td><td>dead code analysis</td><td class="pm">—</td><td class="pt">—</td></tr>
+<tr data-stage="opt"><td>2.4</td><td>dead code analysises</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="hoist"><td>2.5</td><td>time hoisting</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="emit"><td>2.6</td><td>glsl code generating</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="bytecode"><td>2.7</td><td>bytecode generating and fuseing</td><td class="pm">—</td><td class="pt">—</td></tr>
-<tr data-stage="serialize"><td>2.8</td><td>binary format round trip</td><td class="pm">—</td><td class="pt">—</td></tr>
+<tr data-stage="serialize"><td>2.8</td><td>binary format round tripping</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="verify"><td>2.9</td><td>bytecode verifying</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="gradient"><td>2.10</td><td>gradient checking</td><td class="pm">—</td><td class="pt">—</td></tr>
 <tr data-stage="bounds"><td>2.11</td><td>surface localization</td><td class="pm">—</td><td class="pt">—</td></tr>
@@ -34,7 +35,7 @@
 <hr>
 
 <div class="bar">3. source</div>
-<p><label for="preset">pick a example:</label> <select id="preset"></select></p>
+<p><label for="preset">pick you're example:</label> <select id="preset"></select></p>
 <div class="editor">
 <div class="gutter" id="gutter" aria-hidden="true">1</div>
 <div class="code">
@@ -48,13 +49,13 @@
 <div class="bar">4. viewport</div>
 <p><button id="pause" type="button">resume</button> <button id="resetcam" type="button">reset view</button></p>
 <canvas id="view" aria-label="rendered distance field"></canvas>
-<p class="small">drag it for rotate. scroll to zoom. click it without dragging and it probe a point (look at section 5).</p>
-<p class="small" id="status">fps aint measured yet.</p>
-<p id="glfail" hidden>webgl2 dont work on this browser. section 5, 6, 7 and 8 still work tho.</p>
+<p class="small">drag it for rotating. scroll for zooming. click it but dont drag and then it probe's a point (go look at section 5).</p>
+<p class="small" id="status">fps aint been measure yet.</p>
+<p id="glfail" hidden>webgl2 dont works on this browser. section 5, 6, 7 and 8 still works tho.</p>
 <hr>
 
 <div class="bar">5. probe</div>
-<p>the probe trace a ray on the cpu using the compiled bytecode, the gpu dont do nothing for this.</p>
+<p>the probe trace's a ray on the cpu by using the compiled bytecode, the gpu dont do nothing for this one.</p>
 <div class="tablewrap">
 <table cellspacing="1" cellpadding="1" border="1">
 <tr><th>pixel</th><td id="pr-pixel">no probe yet.</td></tr>
@@ -77,7 +78,7 @@
 <hr>
 
 <div class="bar">6. cross-section</div>
-<p>this here is a horizontal slice thru the distance field. darker grey mean inside the surface. contour lines is 0.1 units apart from each other. squares with a outline is octree cells from stage 2.11 that maybe got the surface in them.</p>
+<p>this here be a horizontal slice thru the distance field. more darker grey mean its inside of the surface. contour line's is 0.1 unit apart from each others. square's with a outline is octree cell's from stage 2.11 what maybe got the surface inside them.</p>
 <p>
 <label for="section-y">slice height y</label> <input id="section-y" type="number" step="0.1" value="0">
 <button type="button" id="section-draw">draw cross-section</button>
@@ -87,7 +88,7 @@
 <hr>
 
 <div class="bar">7. mesh</div>
-<p>stage 2.12 make a triangle mesh from the field using surface nets, then stage 2.13 push every vertex onto the real surface with newton's method. numbers is below. the whole mesh is in section 9 under "mesh" as obj text.</p>
+<p>stage 2.12 make's a triangle mesh out from the field using surface nets, then stage 2.13 pushes every vertex's onto the real surface with newtons method. the number's is below. the hole mesh is at section 9 under "mesh" as obj text.</p>
 <div class="tablewrap">
 <table cellspacing="1" cellpadding="1" border="1">
 <tr><th>vertices</th><td id="mesh-v">—</td></tr>
@@ -102,7 +103,7 @@
 <hr>
 
 <div class="bar">8. binary</div>
-<p>stage 2.8 write the bytecode into a binary format with a crc32 checksum at the end, then read it back in to make sure its the same. u can see the bytes in section 9 under "binary".</p>
+<p>stage 2.8 write's the bytecode in to a binary format with a crc32 checksum on the end, then it read it back in for making sure its the same. u can seen the byte's at section 9 under "binary".</p>
 <hr>
 
 <div class="bar">9. output</div>
@@ -121,11 +122,11 @@
 <hr>
 
 <div class="bar">10. language reference</div>
-<p><code>let name = expr</code> bind a value. <code>fn name(a, b) = expr</code> define a function, it get inlined everywhere its called. the last line is the distance what get rendered. <code>p</code> is the sample point (vec3), <code>t</code> is time in second and <code>pi</code> is π.</p>
-<p>operators: <code>+ - * /</code> works on floats and vectors; <code>a | b</code> is union; <code>a &amp; b</code> is intersection; <code>a ~ b</code> is subtraction. components get read with <code>.x</code>, <code>.xz</code> and stuff like that. <code>#</code> start a comment. ctrl+enter recompile right now.</p>
+<p><code>let name = expr</code> bind's a value. <code>fn name(a, b) = expr</code> define's a function, it get inline everywhere its call. the last line be the distance what get render. <code>p</code> is the sample point (vec3), <code>t</code> be time in second's and <code>pi</code> is π.</p>
+<p>operators: <code>+ - * /</code> work's on float's and vector's; <code>a | b</code> be union; <code>a &amp; b</code> is intersection; <code>a ~ b</code> is subtraction. component's get readed with <code>.x</code>, <code>.xz</code> and stuff like that there. <code>#</code> start's a comment. ctrl+enter recompile it right now.</p>
 <dl class="reftable" id="reftable"></dl>
 <hr>
-<p>end of document.</p>
+<p>end of the document's.</p>
 <p>this project is open source, so please donate to support me, my wife, and my projects :) ! btc: bc1qs4z04ltddh6vaqd4stu3p4vekv253ht4cwqma4</p>
 <p>source code and my other projects: <a href="https://github.com/onononoo/complexity" target="_blank" rel="noopener">https://github.com/onononoo/complexity</a> :: <a href="https://github.com/onononoo/" target="_blank" rel="noopener">https://github.com/onononoo/</a></p>
 </div>

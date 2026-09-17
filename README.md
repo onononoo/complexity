@@ -1,12 +1,14 @@
 # complexity!!1!!!1111!1!
 
-this is a compiler for a small language what describe 3d shapes as signed distance fields. it all run in the browser. programs gets compiled into a glsl shader for the gpu and into register bytecode for a javascript virtual machine, the bytecode also get saved in a binary format, and it make a triangle mesh to. the compiler check its own output using a reference evaluator, automatic differentiation and interval arithmetic.
+<img src="kara.jpg" alt="kara" width="96" height="96">
 
-no build step. no dependencies neither.
+this here is a compiler for a small language what describe's 3d shape's as signed distance field's. it all run's in the browser. program's gets compile into a glsl shader for the gpu and in to register bytecode for a javascript virtual machine, the bytecode also get saved in a binary format to, and it make's a triangle mesh aswell. the compiler check's it's own output by using a reference evaluator, automatic differentiation and interval arithmetic.
+
+there aint no build step. no dependencie's neither.
 
 ## tabbel of contents
 
-- [quick start](#quick-start)
+- [quick start](#quick-start--locally)
 - [example program](#example-program)
 - [features](#features)
 - [compiler stages](#compiler-stages)
@@ -20,15 +22,15 @@ no build step. no dependencies neither.
 
 ## quick start :: **locally**
 
-open `index.html` in a browser.
+open up `index.html` in a browser.
 
-opening the file direct works because the page use classic scripts. if ur browser block local files, run the server thats in `.root`:
+opening the file direct work's cause the page use classic script's. if ur browser block's local file's, run the server what's in `.root`:
 
 ```bash
 node .root/serve.js
 ```
 
-then go to <http://localhost:8123/>. u can give it a other port like `node .root/serve.js 9000`.
+then go on <http://localhost:8123/>. u can gives it a other port like `node .root/serve.js 9000`.
 
 ## example program
 
@@ -44,16 +46,16 @@ let lattice = box(rep(p, 0.42), 0.15)
 smin(core ~ lattice, halo, 0.2) | plane(p, 1.4)
 ```
 
-`p` is the point that gets sampled and `t` is time in second. last line is the distance that get rendered. `|` is union, `&` is intersection and `~` is subtraction. the hole language is in [docs/language.md](docs/language.md).
+`p` be the point what gets sampled and `t` be time in second's. last line is the distance what get render. `|` is union, `&` is intersection and `~` is subtraction. the hole language be in [docs/language.md](docs/language.md).
 
 ## features!
 
-- lexer and pratt parser, errors tells u the line and column and if u spell a name wrong it suggest one.
+- lexer and pratt parser, error's tells u the line and column and if u spells a name wrong it suggest's one.
 - static types (`float`, `vec2`, `vec3`) with generic builtin signatures.
-- user functions, they gets inlined wherever there called.
+- user function's, they gets inline wherever there call.
 - hash-consed expression graph so duplicate subexpressions goes away.
 - constant folding, algebraic simplifying and constant reassociation.
-- dead code detection and warnings for stuff u defined but never used.
+- dead code detection and warning's for stuff u defined but never use'd.
 - time hoisting, math that only use `t` get moved out the shader and done once a frame on cpu.
 - glsl code generating, shared values goes in temporaries.
 - register bytecode with liveness based register reuse and multiply-add fusion, plus a virtual machine for running it.
@@ -85,7 +87,7 @@ smin(core ~ lattice, halo, 0.2) | plane(p, 1.4)
 | 13 | mesh refineing | `js/analysis/refine.js` | same mesh but vertex's is on the surface |
 | 14 | gpu shader linking | `js/gpu/renderer.js` | webgl2 program |
 
-stage 1 thru 13 is in `js/app/compiler.js` and dont use the dom. stage 14 only happen on the page. more detail is in [docs/architecture.md](docs/architecture.md).
+stage 1 thru 13 is at `js/app/compiler.js` and dont uses the dom. stage 14 only happen's on the page. more detail's is in [docs/architecture.md](docs/architecture.md).
 
 ## project layout
 
@@ -106,30 +108,30 @@ tests/                  node test runner, harness, benchmark and test files
 docs/                   language and architecture docs
 ```
 
-all the scripts share one global scope so the order of `<script>` tags in `index.html` matter. `tests/load.js` got the same order for node.
+all the script's share one global scope so the order of `<script>` tag's in `index.html` matter's alot. `tests/load.js` got the same order for node.
 
 ## the .root folder
 
-`.root` is where the local tooling live.
+`.root` be where all the local tooling live's at.
 
 - `.root/serve.js` is a small static server with no dependencies. it serve the project folder no matter where u run it from, it send `no-store` so edits show up on reload, and it wont serve anything inside `.root` or `.git` or outside the project.
 - `.root/launch.json` tell editors and tools how to start that server (`node .root/serve.js 8123`).
 
 ## tests
 
-u need [node.js](https://nodejs.org/) 18 or newer for tests. they cover every stage except gpu linking.
+u needs [node.js](https://nodejs.org/) 18 or more newer for test's. they cover's every stage accept gpu linking.
 
 ```bash
 node tests/run-node.js
 ```
 
-to only run the tests with some text in there name:
+to only run the test's with some text in they're name:
 
 ```bash
 node tests/run-node.js serialize
 ```
 
-to print how long every stage take for each example:
+for printing how long every stage take's for each example's:
 
 ```bash
 node tests/bench-node.js
@@ -137,7 +139,7 @@ node tests/bench-node.js
 
 ## browser support
 
-the renderer need webgl2. without it the page still compile stuff, and the probe, cross-section, mesh and binary still works. its made for current chrome, edge, firefox and safari.
+the renderer need's webgl2. without it the page still compile's stuff, and the probe, cross-section, mesh and binary still work's. it's made for current chrome, edge, firefox and safari's.
 
 ## more documentation
 
@@ -146,7 +148,7 @@ the renderer need webgl2. without it the page still compile stuff, and the probe
 
 ## license
 
-it is released under the [mit license](https://github.com/onononoo/complexity?tab=MIT-1-ov-file).
+it be released under the [mit license](https://github.com/onononoo/complexity?tab=MIT-1-ov-file).
 
 ## support
 
